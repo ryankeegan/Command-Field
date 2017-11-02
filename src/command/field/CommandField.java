@@ -18,6 +18,8 @@ public class CommandField extends JFrame implements Runnable {
                 }
             }
         });
+        init();
+        start();
     }
     
     public static void main(String[] args) {
@@ -25,6 +27,7 @@ public class CommandField extends JFrame implements Runnable {
         frame.setSize(Window.WINDOW_WIDTH, Window.WINDOW_HEIGHT);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+        frame.setResizable(false);
     }
     
     public void paint(Graphics gOld) {
@@ -35,8 +38,21 @@ public class CommandField extends JFrame implements Runnable {
             g = (Graphics2D) image.getGraphics();
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         }
+        //fill background
         
+        g.setColor(Color.cyan);
+        g.fillRect(0, 0, Window.xsize, Window.ysize);
+
+        int x[] = {Window.getX(0), Window.getX(Window.getWidth2()), Window.getX(Window.getWidth2()), Window.getX(0), Window.getX(0)};
+        int y[] = {Window.getY(0), Window.getY(0), Window.getY(Window.getHeight2()), Window.getY(Window.getHeight2()), Window.getY(0)};
+//fill border
+        g.setColor(Color.white);
+        g.fillPolygon(x, y, 4);
+// draw border
+        g.setColor(Color.red);
+        g.drawPolyline(x, y, 5);
         Menu.Draw();
+        Board.Draw(g);
         
         gOld.drawImage(image, 0, 0, null);
     }
