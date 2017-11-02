@@ -7,9 +7,11 @@ public class Window {
     private static final int BOTTOM_BORDER = 20;
     private static final int YTITLE = 30;
     private static final int WINDOW_BORDER = 8;
+    private static final int ACTUAL_WINDO_WIDTH=1280;
+    private static final int ACTUAL_WINDO_HEIGHT=720;
     
-    static final int WINDOW_WIDTH = 2*(WINDOW_BORDER + XBORDER) + 1152;
-    static final int WINDOW_HEIGHT = YTITLE + WINDOW_BORDER + 648;
+    static final int WINDOW_WIDTH = 2*(WINDOW_BORDER + XBORDER) + ACTUAL_WINDO_WIDTH;
+    static final int WINDOW_HEIGHT = YTITLE + WINDOW_BORDER + ACTUAL_WINDO_HEIGHT;
     static int xsize = -1;
     static int ysize = -1;
 
@@ -19,6 +21,14 @@ public class Window {
 
     public static int getY(int y) {
         return (y + TOP_BORDER + YTITLE );
+        
+    }
+    public static int getActualWindowWidth() {
+        return (ACTUAL_WINDO_WIDTH );
+        
+    }
+        public static int getActualWindowHeight() {
+        return (ACTUAL_WINDO_HEIGHT );
         
     }
 
