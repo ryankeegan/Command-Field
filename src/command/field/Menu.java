@@ -36,10 +36,12 @@ public class Menu {
         Font ringbearerBody = LoadFont(20);
         g.setColor(Color.black);
         g.setFont(ringbearerHeader);
-        g.drawString("Command Field", 30, 90);
+        g.drawString("Command Field", Window.getX(30), Window.getY(60));
         g.setFont(ringbearerBody);
-        g.drawString("Start", 30, Window.getYNormal(150));
-        g.drawString("Exit", 30, Window.getYNormal(100));
+        Button start = new Button(Window.getX(30), Window.getYNormal(150), "Start");
+        Button exit = new Button(Window.getX(30), Window.getYNormal(100), "Exit");
+        start.draw();
+        exit.draw();
     }
     
     public static void OptionsMenu() {
