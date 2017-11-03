@@ -73,6 +73,7 @@ public class CommandField extends JFrame implements Runnable {
                 Window.ysize = getSize().height;
             }
             
+            Board.BoardInit();
             reset();
         }
     }
