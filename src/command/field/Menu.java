@@ -38,8 +38,8 @@ public class Menu {
         g.setFont(ringbearerHeader);
         g.drawString("Command Field", Window.getX(30), Window.getY(60));
         g.setFont(ringbearerBody);
-        Button start = new Button(Window.getX(30), Window.getYNormal(150), "Start");
-        Button exit = new Button(Window.getX(30), Window.getYNormal(100), "Exit");
+        Button start = new Button(Window.getX(30), Window.getYNormal(150), "Start", ringbearerBody, "StartGame");
+        Button exit = new Button(Window.getX(30), Window.getYNormal(100), "Exit", ringbearerBody, "Exit");
         start.draw();
         exit.draw();
     }
@@ -58,18 +58,19 @@ public class Menu {
     
     public static Font LoadFont(float _size) {
         try {
-            //Returned font is of pt size 1
             Font font = Font.createFont(Font.TRUETYPE_FONT, new File("ringbearer.ttf"));
-
-            //Derive and return a 12 pt version:
-            //Need to use float otherwise
-            //it would be interpreted as style
-
             return font.deriveFont(_size);
-
         } catch (IOException|FontFormatException e) {
-             // Handle exception
         }
         return null;
+    }
+    
+    public static void Exit() {
+        System.exit(0);
+    }
+    
+    public static void StartGame() {
+        menuType = Type.UNIT_SELECTION;
+        CommandField.inGame = true;
     }
 }

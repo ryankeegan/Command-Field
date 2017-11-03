@@ -2,6 +2,8 @@ package command.field;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 public class CommandField extends JFrame implements Runnable {
@@ -15,7 +17,11 @@ public class CommandField extends JFrame implements Runnable {
         addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 if (e.BUTTON1 == e.getButton() ) {
-                    //PerlinNoise.CheckBorderPixels(e.getX(),e.getY());
+                    try {
+                        Button.CheckCollision(e.getX(),e.getY());
+                    } catch (Exception ex) {
+                        Logger.getLogger(CommandField.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });
