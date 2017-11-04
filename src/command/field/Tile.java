@@ -1,24 +1,22 @@
 package command.field;
 
+import command.field.units.Unit;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
 public class Tile {
-    private enum TerrainType {
+    private static enum TerrainType {
         WATER,SAND,GRASS,FOREST,ROCK,BARE_ROCK
     }
-    private int xPos; //Left
-    private int yPos; //Top
-    private int xPos2;//Right
-    private int yPos2;//Bottom
+    private int xPos;
+    private int yPos;
     private TerrainType terrain;
     Tile(int _xPos, int _yPos, int _terrain) {
         xPos = _xPos;
         yPos = _yPos;
-        xPos2 = xPos + Board.xdelta;
-        yPos2 = yPos + Board.ydelta;
         terrain = ResolveTerrain(_terrain);
     }
+    private Unit unit;
     
     public static TerrainType ResolveTerrain(int _height) {
         if(_height < 100) {
@@ -72,5 +70,17 @@ public class Tile {
     
     public TerrainType getType() {
         return(terrain);
+    }
+    
+    public Unit getUnit() {
+        return(unit);
+    }
+    
+    public void addUnit(Unit _unit) {
+        if(unit == null) {
+            unit = _unit;
+        } else {
+            System.out.println("Unit already on tile");
+        }
     }
 }

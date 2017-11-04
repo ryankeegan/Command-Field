@@ -1,5 +1,6 @@
 package command.field;
 
+import command.field.units.*;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.font.FontRenderContext;
@@ -16,12 +17,29 @@ public class Button {
     private int width;
     private int height;
     private String method;
+    private String param;
     
     Button(int _xPos, int _yPos, String _contents, Font _font, String _method) {
         contents = _contents;
         xPos = _xPos;
         yPos = _yPos;
         method = _method;
+        AffineTransform affinetransform = new AffineTransform();   
+        FontRenderContext frc = new FontRenderContext(affinetransform,true,true);
+        width = (int)_font.getStringBounds(_contents, frc).getWidth();
+        height = (int)_font.getStringBounds(_contents, frc).getHeight();
+        if(!buttonNames.contains(contents)) {
+            buttonNames.add(contents);
+            buttons.add(this);
+        }
+    }
+    
+    Button(int _xPos, int _yPos, String _contents, Font _font, String _method, String _param) {
+        contents = _contents;
+        xPos = _xPos;
+        yPos = _yPos;
+        method = _method;
+        param = _param;
         AffineTransform affinetransform = new AffineTransform();   
         FontRenderContext frc = new FontRenderContext(affinetransform,true,true);
         width = (int)_font.getStringBounds(_contents, frc).getWidth();
@@ -55,7 +73,11 @@ public class Button {
     }
     
     public void callMethod() throws Exception {
-        Menu.class.getDeclaredMethod(method).invoke(null);
+        if(param != null) {
+            Menu.class.getDeclaredMethod(method, Unit.UnitType.class).invoke(null, Unit.UnitType.valueOf(param));
+        } else {
+            Menu.class.getDeclaredMethod(method).invoke(null);
+        }
     }
     
     public static void ClearButtons() {
