@@ -19,10 +19,22 @@ public class CommandField extends JFrame implements Runnable {
                 if (e.BUTTON1 == e.getButton() ) {
                     try {
                         Button.CheckCollision(e.getX(),e.getY());
+                        if(inGame) {
+                            Board.CheckCollision(e.getX(), e.getY());
+                        }
                     } catch (Exception ex) {
                         Logger.getLogger(CommandField.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+            }
+        });
+        
+        addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if (e.VK_INSERT == e.getKeyCode()) {
+                    Board.BoardInit();
+                }
+                repaint();
             }
         });
         init();
