@@ -62,6 +62,8 @@ public class Menu {
     }
     
     private static void UnitSelectionMenu(Graphics2D g) {
+        Board.ShadeTilesTurn(Player.GetPlayer(Player.GetTurn()));
+        
         Font ringbearerBody = LoadFont(20);
         g.setColor(Color.black);
         g.setFont(ringbearerBody);
@@ -148,6 +150,7 @@ public class Menu {
         if(Player.GetTurn() >= Player.GetNumPlayers()) {
             menuType = MenuType.BLANK;
             CommandField.started = true;
+            Board.ClearShadedTiles();
         } else {
             Player.SwitchTurn();
         }

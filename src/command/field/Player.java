@@ -76,7 +76,19 @@ public class Player {
         return(playerNumber);
     }
     
+    public int getPlayerNumberRaw() {
+        return(playerNumber-1);
+    }
+    
     public Color getPlayerColor() {
         return(playerColor);
+    }
+    
+    public static int GetNextTurnRaw() {
+        if(GetTurn()+1 < players.length && players[GetTurn()+1] != null) {
+            return(players[GetTurn()+1].getPlayerNumberRaw());
+        } else {
+            return(players[0].getPlayerNumberRaw());
+        }
     }
 }

@@ -22,6 +22,8 @@ public class Tile {
         terrain = ResolveTerrain(_terrain);
     }
     private Unit unit;
+    private boolean shaded = false;
+    private Color shadedColour;
     
     public static TerrainType ResolveTerrain(int _height) {
         if(_height < 100) {
@@ -63,6 +65,11 @@ public class Tile {
     public void draw(Graphics2D g) {
         g.setColor(ResolveTerrainColor(terrain));
         g.fillRect(xPos, yPos, Board.xdelta, Board.ydelta);
+        if(shaded) {
+            g.setColor(shadedColour);
+            g.fillRect(xPos, yPos, Board.xdelta, Board.ydelta);
+        }
+        
         if(unit != null) {
             g.setColor(unit.getOwner().getPlayerColor());
             drawCenteredString(g, unit.getIcon(), new Rectangle(xPos, yPos, Board.xdelta, Board.ydelta), new Font("Arial", Font.PLAIN, (Board.xdelta-5)));
@@ -110,5 +117,14 @@ public class Tile {
             g.setFont(font);
             g.drawString(text, x, y);
         }
+    }
+    
+    public void setShaded(boolean _shaded, Color _shadedColour) {
+        shaded = _shaded;
+        shadedColour = _shadedColour;
+    }
+    
+    public void setShaded(boolean _shaded) {
+        shaded = _shaded;
     }
 }

@@ -85,4 +85,34 @@ public class Board {
     public static int GetBoardWidth() {
         return BoardWidth;
     }
+    
+    public static void ShadeTilesTurn(Player _playerTurn) {
+        for (int row=(NUM_ROWS/2)*_playerTurn.getPlayerNumberRaw(); row<NUM_ROWS-((NUM_ROWS/2)*(1-_playerTurn.getPlayerNumberRaw())); row++) {
+            System.out.println(row);
+            for (int col=0; col<NUM_COLUMNS; col++) {
+                if(board[row][col] != null) {
+                    board[row][col].setShaded(true, new Color(0,0,0,155));
+                }
+            }
+        }
+        
+        for (int row=(NUM_ROWS/2)*Player.GetNextTurnRaw(); row<NUM_ROWS-((NUM_ROWS/2)*(1-Player.GetNextTurnRaw())); row++) {
+            System.out.println(row);
+            for (int col=0; col<NUM_COLUMNS; col++) {
+                if(board[row][col] != null) {
+                    board[row][col].setShaded(false);
+                }
+            }
+        }
+    }
+    
+    public static void ClearShadedTiles() {
+        for (int row=0; row<NUM_ROWS; row++) {
+            for (int col=0; col<NUM_COLUMNS; col++) {
+                if(board[row][col] != null) {
+                    board[row][col].setShaded(false);
+                }
+            }
+        }
+    }
 }
