@@ -2,7 +2,12 @@ package command.field;
 
 import command.field.units.Unit;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 
 public class Tile {
     private static enum TerrainType {
@@ -58,6 +63,10 @@ public class Tile {
     public void draw(Graphics2D g) {
         g.setColor(ResolveTerrainColor(terrain));
         g.fillRect(xPos, yPos, Board.xdelta, Board.ydelta);
+        if(unit != null) {
+            g.setColor(unit.getOwner().getPlayerColor());
+            drawCenteredString(g, unit.getIcon(), new Rectangle(xPos, yPos, Board.xdelta, Board.ydelta), new Font("Arial", Font.PLAIN, (Board.xdelta-5)));
+        }
     }
     
     public int getRow() {
@@ -81,6 +90,25 @@ public class Tile {
             unit = _unit;
         } else {
             System.out.println("Unit already on tile");
+        }
+    }
+    
+    public void drawCenteredString(Graphics g, String text, Rectangle rect, Font font) {
+        FontMetrics metrics = g.getFontMetrics(font);
+        int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
+        int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
+        if(text == "<" | text == "«") {
+            AffineTransform affineTransform = new AffineTransform();
+            affineTransform.rotate(Math.toRadians(90), 0, 0);
+            Font rotatedFont = font.deriveFont(affineTransform);
+            g.setFont(rotatedFont);
+            g.drawString(text, x, y-Board.ydelta/2);
+        } else if(text == "*") {
+            g.setFont(font);
+            g.drawString(text, x, y+Board.ydelta/4);
+        } else {
+            g.setFont(font);
+            g.drawString(text, x, y);
         }
     }
 }

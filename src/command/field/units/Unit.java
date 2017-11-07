@@ -11,6 +11,7 @@ public abstract class Unit {
     protected UnitType unitType;
     protected int unitCost;
     protected Player owner;
+    protected String unitIcon;
     
     Unit(Player _owner) {
         owner = _owner;
@@ -30,6 +31,10 @@ public abstract class Unit {
     
     public UnitType getType() {
         return unitType;
+    }
+    
+    public String getIcon() {
+        return unitIcon;
     }
     
     public static Unit ResolveUnitType(UnitType _unit, Player _owner) {

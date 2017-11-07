@@ -9,6 +9,7 @@ public class UnitGeneral extends Unit {
         hp = 75;
         damage = 20;
         unitType = UnitType.GENERAL;
+        unitIcon = "«";
     }
     
     public void move() {

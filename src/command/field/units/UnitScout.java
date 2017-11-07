@@ -9,6 +9,7 @@ public class UnitScout extends Unit {
         hp = 50;
         damage = 15;
         unitType = UnitType.SCOUT;
+        unitIcon = "<";
     }
     
     public void move() {

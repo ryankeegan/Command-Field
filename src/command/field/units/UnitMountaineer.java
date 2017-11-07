@@ -9,6 +9,7 @@ public class UnitMountaineer extends Unit {
         hp = 100;
         damage = 20;
         unitType = UnitType.MOUNTAINEER;
+        unitIcon = "*";
     }
     
     public void move() {

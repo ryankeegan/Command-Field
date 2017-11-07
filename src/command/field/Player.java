@@ -2,6 +2,7 @@ package command.field;
 
 import java.util.ArrayList;
 import command.field.units.*;
+import java.awt.Color;
 
 public class Player {
     private static Player currentTurn;
@@ -9,6 +10,7 @@ public class Player {
     private ArrayList<Unit> units = new ArrayList<Unit>();
     private int playerNumber;
     private static int numPlayers = 1;
+    private Color playerColor;
     private int troopPoints; //Points to allocate to troops at beginning of round
     
     Player() {
@@ -28,8 +30,12 @@ public class Player {
         for(int i = 0; i<players.length; i++) {
             if(players[i] != null) {
                 players[i].units.clear();
+                players[i].troopPoints = 100;
             }
         }
+        
+        players[0].playerColor = Color.black;
+        players[1].playerColor = Color.red;
     }
     
     public static void SwitchTurn() {
@@ -68,5 +74,9 @@ public class Player {
     
     public int getPlayerNumber() {
         return(playerNumber);
+    }
+    
+    public Color getPlayerColor() {
+        return(playerColor);
     }
 }

@@ -9,6 +9,7 @@ public class UnitNaval extends Unit {
         hp = 90;
         damage = 25;
         unitType = UnitType.NAVAL;
+        unitIcon = "+";
     }
     
     public void move() {
