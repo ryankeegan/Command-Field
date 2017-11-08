@@ -1,6 +1,8 @@
 package command.field.units;
 
 import command.field.Player;
+import command.field.Tile;
+import java.util.ArrayList;
 
 public abstract class Unit {
     protected int hp;
@@ -10,8 +12,11 @@ public abstract class Unit {
     }
     protected UnitType unitType;
     protected int unitCost;
+    protected final int move_pts=5;
+    protected Tile.TerrainType allowed[];
+    protected int numAllowed;
+
     protected Player owner;
-    protected String unitIcon;
     
     Unit(Player _owner) {
         owner = _owner;
@@ -31,10 +36,6 @@ public abstract class Unit {
     
     public UnitType getType() {
         return unitType;
-    }
-    
-    public String getIcon() {
-        return unitIcon;
     }
     
     public static Unit ResolveUnitType(UnitType _unit, Player _owner) {
@@ -70,5 +71,7 @@ public abstract class Unit {
         return owner;
     }
     
-    public abstract void move();
+    public abstract void move(Tile movefrom, Tile moveto);
+    public abstract int getMoveCost(Tile movefrom, Tile moveto);
+    //public abstract void attack();
 }
