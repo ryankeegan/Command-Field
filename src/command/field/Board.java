@@ -86,6 +86,10 @@ public class Board {
         return BoardWidth;
     }
     
+   public static Tile getTileOf(int row, int col){
+       return(board[row][col]);
+   }
+    
     public static void ShadeTilesTurn(Player _playerTurn) {
         for (int row=(NUM_ROWS/2)*_playerTurn.getPlayerNumberRaw(); row<NUM_ROWS-((NUM_ROWS/2)*(1-_playerTurn.getPlayerNumberRaw())); row++) {
             System.out.println(row);

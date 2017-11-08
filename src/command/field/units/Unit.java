@@ -7,19 +7,23 @@ import java.util.ArrayList;
 public abstract class Unit {
     protected int hp;
     protected int damage;
+    protected String unitIcon;
     public static enum UnitType {
         SCOUT,MOUNTAINEER,NAVAL,GENERAL
     }
     protected UnitType unitType;
     protected int unitCost;
     protected final int move_pts=5;
-    protected Tile.TerrainType allowed[];
+    //protected Tile.TerrainType[] allowed;
     protected int numAllowed;
+    
+    
 
     protected Player owner;
     
     Unit(Player _owner) {
         owner = _owner;
+        //allowed = new Tile.TerrainType[numAllowed];
     }
     
     public int getHP() {
@@ -73,5 +77,6 @@ public abstract class Unit {
     
     public abstract void move(Tile movefrom, Tile moveto);
     public abstract int getMoveCost(Tile movefrom, Tile moveto);
+    public abstract String getUnitIcon();
     //public abstract void attack();
 }

@@ -10,7 +10,7 @@ import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 
 public class Tile {
-    private static enum TerrainType {
+    public static enum TerrainType {
         WATER,SAND,GRASS,FOREST,ROCK,BARE_ROCK
     }
     private int xPos;
@@ -72,7 +72,7 @@ public class Tile {
         
         if(unit != null) {
             g.setColor(unit.getOwner().getPlayerColor());
-            drawCenteredString(g, unit.getIcon(), new Rectangle(xPos, yPos, Board.xdelta, Board.ydelta), new Font("Arial", Font.PLAIN, (Board.xdelta-5)));
+            drawCenteredString(g, unit.getUnitIcon(), new Rectangle(xPos, yPos, Board.xdelta, Board.ydelta), new Font("Arial", Font.PLAIN, (Board.xdelta-5)));
         }
     }
     
@@ -98,6 +98,9 @@ public class Tile {
         } else {
             System.out.println("Unit already on tile");
         }
+    }
+    public void removeUnit() {
+        unit = null;
     }
     
     public void drawCenteredString(Graphics g, String text, Rectangle rect, Font font) {
