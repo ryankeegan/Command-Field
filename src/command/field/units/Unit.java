@@ -75,8 +75,27 @@ public abstract class Unit {
         return(0);
     }
     
+    public static int ResolveUnitHP(UnitType _unit) {
+        Player _owner = null;
+        switch(_unit) {
+            case SCOUT:
+                return((new UnitScout(_owner)).getHP());
+            case MOUNTAINEER:
+                return((new UnitMountaineer(_owner)).getHP());
+            case NAVAL:
+                return((new UnitNaval(_owner)).getHP());
+            case GENERAL:
+                return((new UnitGeneral(_owner)).getHP());
+        }
+        return(0);
+    }
+    
     public Player getOwner() {
         return owner;
+    }
+    
+    public int getMovePoints() {
+        return move_pts;
     }
     
     public abstract void move(Tile movefrom, Tile moveto);

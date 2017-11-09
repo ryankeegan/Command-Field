@@ -12,10 +12,11 @@ import java.util.Map;
 
 public class Menu {
     public static enum MenuType {
-        MAIN,UNIT_SELECTION,UNIT_INFO,OPTIONS,BLANK
+        MAIN,UNIT_SELECTION,UNIT_INFO,OPTIONS,BLANK,UNIT_MOVEMENT,RULES
     }
     private static MenuType menuType = MenuType.MAIN;
     private static Tile selection;
+    private static Tile movePiece;
     
     public static void Draw(Graphics2D g) {
         switch(menuType) {
@@ -30,6 +31,9 @@ public class Menu {
                 break;
             case UNIT_INFO:
                 UnitInfoMenu(g);
+                break;
+            case UNIT_MOVEMENT:
+                UnitMovementMenu(g);
                 break;
             case BLANK:
                 BlankMenu(g);
@@ -109,14 +113,34 @@ public class Menu {
         if(selection.getUnit() != null) {
             g.drawString("Unit Owner:   Player " + selection.getUnit().getOwner().getPlayerNumber(), Window.getX(Board.GetBoardWidth()+20), Window.getY(140));
             g.drawString("Unit Type:   " + String.valueOf(selection.getUnit().getType()).toLowerCase(), Window.getX(Board.GetBoardWidth()+20), Window.getY(180));
-            g.drawString("Unit HP:   " + selection.getUnit().getHP(), Window.getX(Board.GetBoardWidth()+20), Window.getY(220));
+            g.drawString("Unit HP:   " + selection.getUnit().getHP() + "/" + Unit.ResolveUnitHP(selection.getUnit().getType()), Window.getX(Board.GetBoardWidth()+20), Window.getY(220));
             g.drawString("Unit Damage:   " + selection.getUnit().getDamage(), Window.getX(Board.GetBoardWidth()+20), Window.getY(260));
+            Button move = new Button(Window.getX(Window.getWidth2()-100), Window.getYNormal(50), "Move", ringbearerBody, "OpenMoveUnitMenu");
+            move.draw();
         }
     }
     
     private static void BlankMenu(Graphics2D g) {
         g.setColor(new Color(255,255,255));
         g.fillRect(Window.getX(Board.GetBoardWidth()+5), Window.getY(0), Window.getWidth2()-975, Window.getY(Window.getYNormal(100)));
+    }
+    
+    private static void UnitMovementMenu(Graphics2D g) {
+        if(CommandField.inGame) {
+            Font ringbearerBody = LoadFont(20);
+            g.setColor(Color.black);
+            g.setFont(ringbearerBody);
+            g.drawString("Unit Tile:   " + (movePiece.getRow()+1) + ", " + movePiece.getCol(), Window.getX(Board.GetBoardWidth()+20), Window.getY(60));
+            g.drawString("Selected Tile:   " + (selection.getRow()+1) + ", " + selection.getCol(), Window.getX(Board.GetBoardWidth()+20), Window.getY(100));
+            g.drawString("Unit Action Points:   " + movePiece.getUnit().getMovePoints(), Window.getX(Board.GetBoardWidth()+20), Window.getY(140));
+
+            g.drawString("Movement Cost:   " + movePiece.getUnit().getMoveCost(movePiece, selection), Window.getX(Board.GetBoardWidth()+20), Window.getY(180));
+            
+            Button cancel = new Button(Window.getX(Window.getWidth2()-100), Window.getYNormal(50), "Cancel", ringbearerBody, "OpenBlankMenu");
+            cancel.draw();
+            Button confirm = new Button(Window.getX(Window.getWidth2()-270), Window.getYNormal(50), "Confirm", ringbearerBody, "Confirm");
+            confirm.draw();
+        }
     }
     
     private static Font LoadFont(float _size) {
@@ -146,11 +170,17 @@ public class Menu {
         CommandField.reset();
     }
     
+    public static void OpenMoveUnitMenu() {
+        menuType = MenuType.UNIT_MOVEMENT;
+        movePiece = selection;
+    }
+    
     public static void ConfirmUnitPlacement() {
         if(Player.GetTurn() >= Player.GetNumPlayers()) {
             menuType = MenuType.BLANK;
             CommandField.started = true;
             Board.ClearShadedTiles();
+            Player.SwitchTurn();
         } else {
             Player.SwitchTurn();
         }
@@ -166,6 +196,10 @@ public class Menu {
     
     public static MenuType GetMenuType() {
         return menuType;
+    }
+    
+    public static void OpenBlankMenu() {
+        menuType = MenuType.BLANK;
     }
     
     public static void MenuAddUnit(Unit.UnitType _unit) {

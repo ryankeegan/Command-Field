@@ -72,7 +72,7 @@ public class Board {
             int col = (_xPos-Window.getX(0))/xdelta;
             int row = ((_yPos-Window.getY(0))/ydelta)-2;
             if(board[row][col] != null) {
-                if(Menu.GetMenuType() != Menu.MenuType.UNIT_SELECTION) {
+                if(Menu.GetMenuType() != Menu.MenuType.UNIT_SELECTION && Menu.GetMenuType() != Menu.MenuType.UNIT_MOVEMENT) {
                     Menu.SetMenuType(Menu.MenuType.UNIT_INFO);
                 }
                 Menu.SetSelection(board[row][col]);

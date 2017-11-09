@@ -39,6 +39,7 @@ public class CommandField extends JFrame implements Runnable {
                     Board.BoardInit();
                 } else if(e.VK_ESCAPE == e.getKeyCode()) {
                     if(started) {
+                        Button.ClearButtons();
                         inGame = false;
                         Menu.SetMenuType(Menu.MenuType.MAIN);
                     }
