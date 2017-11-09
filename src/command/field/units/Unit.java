@@ -13,7 +13,7 @@ public abstract class Unit {
     }
     protected UnitType unitType;
     protected int unitCost;
-    protected final int move_pts=5;
+    protected int move_pts=50;
     //protected Tile.TerrainType[] allowed;
     protected int numAllowed;
     
@@ -36,6 +36,10 @@ public abstract class Unit {
     
     public int getCost() {
         return unitCost;
+    }
+    
+    public void dealDamage(int _damage){
+        hp-=_damage;
     }
     
     public UnitType getType() {
@@ -76,7 +80,9 @@ public abstract class Unit {
     }
     
     public abstract void move(Tile movefrom, Tile moveto);
+    public abstract boolean moveValid(Tile movefrom, Tile moveto);
     public abstract int getMoveCost(Tile movefrom, Tile moveto);
     public abstract String getUnitIcon();
+    public abstract void attack(Tile attackfrom, Tile attackto);
     //public abstract void attack();
 }
