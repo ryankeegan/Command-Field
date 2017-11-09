@@ -52,6 +52,8 @@ public class Board {
                 g.setFont(new Font("Arial", Font.PLAIN, 5));
                 g.drawString(""+i, (Window.getX(0)+xdelta/2), Window.getY(i*ydelta)+ydelta/2+(Window.getActualWindowHeight()-BoardHeight));
             }
+            
+            Board.ColourBorder(g);
         }
     }
     
@@ -92,22 +94,41 @@ public class Board {
     
     public static void ShadeTilesTurn(Player _playerTurn) {
         for (int row=(NUM_ROWS/2)*_playerTurn.getPlayerNumberRaw(); row<NUM_ROWS-((NUM_ROWS/2)*(1-_playerTurn.getPlayerNumberRaw())); row++) {
-            System.out.println(row);
             for (int col=0; col<NUM_COLUMNS; col++) {
                 if(board[row][col] != null) {
                     board[row][col].setShaded(true, new Color(0,0,0,155));
                 }
             }
         }
-        
+
         for (int row=(NUM_ROWS/2)*Player.GetNextTurnRaw(); row<NUM_ROWS-((NUM_ROWS/2)*(1-Player.GetNextTurnRaw())); row++) {
-            System.out.println(row);
             for (int col=0; col<NUM_COLUMNS; col++) {
                 if(board[row][col] != null) {
                     board[row][col].setShaded(false);
                 }
             }
         }
+        
+        for(int col=0; col<NUM_COLUMNS; col++) {
+            if(board[NUM_ROWS/2][col] != null) {
+                board[NUM_ROWS/2][col].setShaded(true, new Color(0,0,0,155));
+            }
+        }
+    }
+    
+    public static boolean AllowedPlacementTiles(Player _playerTurn, int _row, int _column) {
+        if(_row == NUM_ROWS/2-1) {
+            return(false);
+        }
+        
+        for (int row=(NUM_ROWS/2)*Player.GetNextTurnRaw(); row<NUM_ROWS-((NUM_ROWS/2)*(1-Player.GetNextTurnRaw())); row++) {
+            for (int col=0; col<NUM_COLUMNS; col++) {
+                if(board[row][col] != null && board[row][col] == board[_row][_column]) {
+                    return(true);
+                }
+            }
+        }
+        return(false);
     }
     
     public static void ClearShadedTiles() {
@@ -117,6 +138,13 @@ public class Board {
                     board[row][col].setShaded(false);
                 }
             }
+        }
+    }
+    
+    public static void ColourBorder(Graphics2D g) {
+        if(Menu.GetSelectedTile() != null) {
+            g.setColor(Color.red);
+            g.drawRect(Menu.GetSelectedTile().getXPos(), Menu.GetSelectedTile().getYPos(), xdelta, ydelta);
         }
     }
 }

@@ -84,6 +84,14 @@ public class Tile {
         return((xPos-Window.getX(0))/Board.xdelta);
     }
     
+    public int getXPos() {
+        return(xPos);
+    }
+    
+    public int getYPos() {
+        return(yPos);
+    }
+    
     public TerrainType getType() {
         return(terrain);
     }

@@ -78,7 +78,7 @@ public class Menu {
             if(selection.getUnit() != null) {
                 g.drawString("Unit Type:   " + String.valueOf(selection.getUnit().getType()).toLowerCase(), Window.getX(Board.GetBoardWidth()+20), Window.getY(140));
                 g.drawString("Unit Owner:   Player " + selection.getUnit().getOwner().getPlayerNumber(), Window.getX(Board.GetBoardWidth()+20), Window.getY(180));
-            } else if(selection.getUnit() == null) {
+            } else if(selection.getUnit() == null  && Board.AllowedPlacementTiles(Player.GetPlayer(Player.GetTurn()), selection.getRow(), selection.getCol())) {
                 g.drawString("Unit Type:   Free", Window.getX(Board.GetBoardWidth()+20), Window.getY(140));
                 
                 Map<String, Button> buttonMap = new HashMap<String, Button>();
@@ -172,5 +172,9 @@ public class Menu {
         Unit newUnit = Unit.ResolveUnitType(_unit, Player.GetPlayer(Player.GetTurn()));
         Player.GetPlayer(Player.GetTurn()).addUnit(newUnit);
         selection.addUnit(newUnit);
+    }
+    
+    public static Tile GetSelectedTile() {
+        return(selection);
     }
 }
