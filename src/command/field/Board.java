@@ -72,7 +72,7 @@ public class Board {
             int col = (_xPos-Window.getX(0))/xdelta;
             int row = ((_yPos-Window.getY(0))/ydelta)-2;
             if(board[row][col] != null) {
-                if(Menu.GetMenuType() != Menu.MenuType.UNIT_SELECTION && Menu.GetMenuType() != Menu.MenuType.UNIT_MOVEMENT) {
+                if(Menu.GetMenuType() != Menu.MenuType.UNIT_SELECTION && Menu.GetMenuType() != Menu.MenuType.UNIT_MOVEMENT && Menu.GetMenuType() != Menu.MenuType.UNIT_ATTACK && !CommandField.gameOver) {
                     Menu.SetMenuType(Menu.MenuType.UNIT_INFO);
                 }
                 Menu.SetSelection(board[row][col]);
@@ -88,9 +88,9 @@ public class Board {
         return BoardWidth;
     }
     
-   public static Tile getTileOf(int row, int col){
-       return(board[row][col]);
-   }
+    public static Tile GetTileOf(int row, int col) {
+        return(board[row+1][col]);
+    }
     
     public static void ShadeTilesTurn(Player _playerTurn) {
         for (int row=(NUM_ROWS/2)*_playerTurn.getPlayerNumberRaw(); row<NUM_ROWS-((NUM_ROWS/2)*(1-_playerTurn.getPlayerNumberRaw())); row++) {
@@ -146,5 +146,13 @@ public class Board {
             g.setColor(Color.red);
             g.drawRect(Menu.GetSelectedTile().getXPos(), Menu.GetSelectedTile().getYPos(), xdelta, ydelta);
         }
+    }
+    
+    public static int GetNumColumns() {
+        return NUM_COLUMNS;
+    }
+    
+    public static int GetNumRows() {
+        return NUM_ROWS;
     }
 }

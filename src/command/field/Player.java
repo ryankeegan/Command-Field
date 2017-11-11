@@ -8,6 +8,7 @@ public class Player {
     private static Player currentTurn;
     private static Player players[] = new Player[2];
     private ArrayList<Unit> units = new ArrayList<Unit>();
+    private static Player winner;
     private int playerNumber;
     private static int numPlayers = 1;
     private Color playerColor;
@@ -72,6 +73,10 @@ public class Player {
         units.add(_unit);
     }
     
+    public void removeUnit(Unit _unit) {
+        units.remove(_unit);
+    }
+    
     public int getPlayerNumber() {
         return(playerNumber);
     }
@@ -90,5 +95,25 @@ public class Player {
         } else {
             return(players[0].getPlayerNumberRaw());
         }
+    }
+    
+    public int getNumUnits() {
+        return(units.size());
+    }
+    
+    public static void CheckGameOver() {
+        for(Player player : players) {
+            if (player.units.size() <= 0 && CommandField.started && !CommandField.gameOver) {
+                currentTurn = player;
+                SwitchTurn();
+                winner = GetPlayer(GetTurn());
+                Menu.SetMenuType(Menu.MenuType.GAME_OVER);
+                CommandField.gameOver = true;
+            }
+        }
+    }
+    
+    public static Player GetWinner() {
+        return winner;
     }
 }

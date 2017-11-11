@@ -115,7 +115,7 @@ public class Tile {
         FontMetrics metrics = g.getFontMetrics(font);
         int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
         int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
-        if(text == "<" | text == "«") {
+        if(text == "‹" | text == "«") {
             AffineTransform affineTransform = new AffineTransform();
             affineTransform.rotate(Math.toRadians(90), 0, 0);
             Font rotatedFont = font.deriveFont(affineTransform);

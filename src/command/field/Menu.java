@@ -12,13 +12,23 @@ import java.util.Map;
 
 public class Menu {
     public static enum MenuType {
-        MAIN,UNIT_SELECTION,UNIT_INFO,OPTIONS,BLANK,UNIT_MOVEMENT,RULES
+        MAIN,UNIT_SELECTION,UNIT_INFO,OPTIONS,BLANK,UNIT_MOVEMENT,UNIT_ATTACK,RULES,GAME_OVER
     }
     private static MenuType menuType = MenuType.MAIN;
     private static Tile selection;
     private static Tile movePiece;
     
     public static void Draw(Graphics2D g) {
+        if(menuType != MenuType.MAIN && menuType != MenuType.UNIT_SELECTION && menuType != MenuType.GAME_OVER && CommandField.inGame) {
+            Button.ClearButtons();
+            Font ringbearerBody = LoadFont(20);
+            g.setColor(Color.black);
+            g.setFont(ringbearerBody);
+            g.drawString("Player " + (Player.GetTurn()+1) + "'s Turn", Window.getX(15), Window.getY(20));
+            Button nextTurn = new Button(Window.getX(270), Window.getY(20), "Next Turn", ringbearerBody, "NextTurn");
+            nextTurn.draw();
+        }
+        
         switch(menuType) {
             case MAIN:
                 MainMenu(g);
@@ -34,6 +44,12 @@ public class Menu {
                 break;
             case UNIT_MOVEMENT:
                 UnitMovementMenu(g);
+                break;
+            case UNIT_ATTACK:
+                UnitAttackMenu(g);
+                break;
+            case GAME_OVER:
+                GameOverMenu(g);
                 break;
             case BLANK:
                 BlankMenu(g);
@@ -73,8 +89,10 @@ public class Menu {
         g.setFont(ringbearerBody);
         g.drawString("Player " + (Player.GetTurn()+1) + " Unit Selection", Window.getX(15), Window.getY(20));
         g.drawString("Points: " + Player.GetPlayer(Player.GetTurn()).getTroopPoints(), Window.getX(355), Window.getY(20));
-        Button done = new Button(Window.getX(Window.getWidth2()-100), Window.getYNormal(50), "Done", ringbearerBody, "ConfirmUnitPlacement");
-        done.draw();
+        if(Player.GetPlayer(Player.GetTurn()).getNumUnits() > 0) {
+            Button done = new Button(Window.getX(Window.getWidth2()-100), Window.getYNormal(50), "Done", ringbearerBody, "ConfirmUnitPlacement");
+            done.draw();
+        }
         
         if(selection != null && Player.GetPlayer(Player.GetTurn()).getTroopPoints() > 0) {
             g.drawString("Tile:   " + (selection.getRow()+1) + ", " + selection.getCol(), Window.getX(Board.GetBoardWidth()+20), Window.getY(60));
@@ -88,7 +106,7 @@ public class Menu {
                 Map<String, Button> buttonMap = new HashMap<String, Button>();
                 int i = 0;
                 for(Unit.UnitType unit : Unit.UnitType.values()) {
-                    if(Player.GetPlayer(Player.GetTurn()).getTroopPoints()-Unit.ResolveUnitTypeCost(unit) >= 0) {
+                    if(Player.GetPlayer(Player.GetTurn()).getTroopPoints()-Unit.ResolveUnitTypeCost(unit) >= 0 && Unit.ResolveUnitTileCheck(unit, selection)) { //Insert tile type check here
                         buttonMap.put(unit.name(), new Button(Window.getX(Board.GetBoardWidth()+20), Window.getYNormal(100+40*i), unit.name(), ringbearerBody, "MenuAddUnit", unit.toString()));
                         i++;
                     }
@@ -115,8 +133,13 @@ public class Menu {
             g.drawString("Unit Type:   " + String.valueOf(selection.getUnit().getType()).toLowerCase(), Window.getX(Board.GetBoardWidth()+20), Window.getY(180));
             g.drawString("Unit HP:   " + selection.getUnit().getHP() + "/" + Unit.ResolveUnitHP(selection.getUnit().getType()), Window.getX(Board.GetBoardWidth()+20), Window.getY(220));
             g.drawString("Unit Damage:   " + selection.getUnit().getDamage(), Window.getX(Board.GetBoardWidth()+20), Window.getY(260));
-            Button move = new Button(Window.getX(Window.getWidth2()-100), Window.getYNormal(50), "Move", ringbearerBody, "OpenMoveUnitMenu");
-            move.draw();
+            if(selection.getUnit().getOwner() == Player.GetPlayer(Player.GetTurn())) {
+                g.drawString("Unit Action Points:   " + selection.getUnit().getMovePoints(), Window.getX(Board.GetBoardWidth()+20), Window.getY(300));
+                Button move = new Button(Window.getX(Window.getWidth2()-270), Window.getYNormal(50), "Move", ringbearerBody, "OpenMoveUnitMenu");
+                move.draw();
+                Button attack = new Button(Window.getX(Window.getWidth2()-100), Window.getYNormal(50), "Attack", ringbearerBody, "OpenAttackUnitMenu");
+                attack.draw();
+            }
         }
     }
     
@@ -133,14 +156,51 @@ public class Menu {
             g.drawString("Unit Tile:   " + (movePiece.getRow()+1) + ", " + movePiece.getCol(), Window.getX(Board.GetBoardWidth()+20), Window.getY(60));
             g.drawString("Selected Tile:   " + (selection.getRow()+1) + ", " + selection.getCol(), Window.getX(Board.GetBoardWidth()+20), Window.getY(100));
             g.drawString("Unit Action Points:   " + movePiece.getUnit().getMovePoints(), Window.getX(Board.GetBoardWidth()+20), Window.getY(140));
+            g.drawString("Post Action:   " + movePiece.getUnit().getMovePoints() + "-" + movePiece.getUnit().getMoveCost(movePiece, selection) + "=" + (movePiece.getUnit().getMovePoints() - movePiece.getUnit().getMoveCost(movePiece, selection)), Window.getX(Board.GetBoardWidth()+20), Window.getY(180));
 
-            g.drawString("Movement Cost:   " + movePiece.getUnit().getMoveCost(movePiece, selection), Window.getX(Board.GetBoardWidth()+20), Window.getY(180));
+            if(movePiece.getUnit().tileValid(selection) && movePiece.getUnit().moveValid(movePiece, selection) && selection.getUnit() == null) {
+                g.drawString("Movement Cost:   " + movePiece.getUnit().getMoveCost(movePiece, selection), Window.getX(Board.GetBoardWidth()+20), Window.getY(220));
+                Button confirm = new Button(Window.getX(Window.getWidth2()-270), Window.getYNormal(50), "Confirm", ringbearerBody, "ConfirmMoveUnit");
+                confirm.draw();
+            } else {
+                g.drawString("Invalid Move", Window.getX(Board.GetBoardWidth()+20), Window.getY(220));
+            }
             
-            Button cancel = new Button(Window.getX(Window.getWidth2()-100), Window.getYNormal(50), "Cancel", ringbearerBody, "OpenBlankMenu");
+            Button cancel = new Button(Window.getX(Window.getWidth2()-100), Window.getYNormal(50), "Cancel", ringbearerBody, "Cancel");
             cancel.draw();
-            Button confirm = new Button(Window.getX(Window.getWidth2()-270), Window.getYNormal(50), "Confirm", ringbearerBody, "Confirm");
-            confirm.draw();
         }
+    }
+    
+    private static void UnitAttackMenu(Graphics2D g) {
+        if(CommandField.inGame) {
+            Font ringbearerBody = LoadFont(20);
+            g.setColor(Color.black);
+            g.setFont(ringbearerBody);
+            g.drawString("Unit Tile:   " + (movePiece.getRow()+1) + ", " + movePiece.getCol(), Window.getX(Board.GetBoardWidth()+20), Window.getY(60));
+            g.drawString("Selected Tile:   " + (selection.getRow()+1) + ", " + selection.getCol(), Window.getX(Board.GetBoardWidth()+20), Window.getY(100));
+            g.drawString("Unit Action Points:   " + movePiece.getUnit().getMovePoints(), Window.getX(Board.GetBoardWidth()+20), Window.getY(140));
+            g.drawString("Post Action:   " + movePiece.getUnit().getMovePoints() + "-" + (movePiece.getUnit().getAttackCost(movePiece, selection)) + "=" + (movePiece.getUnit().getMovePoints() - movePiece.getUnit().getAttackCost(movePiece, selection)), Window.getX(Board.GetBoardWidth()+20), Window.getY(180));
+
+            if(movePiece.getUnit().attackValid(movePiece, selection) && selection.getUnit() != null) {
+                g.drawString("Attack Cost:   " + movePiece.getUnit().getAttackCost(movePiece, selection), Window.getX(Board.GetBoardWidth()+20), Window.getY(220));
+                g.drawString("Selected Unit HP:   " + selection.getUnit().getHP() + "/" + Unit.ResolveUnitHP(selection.getUnit().getType()), Window.getX(Board.GetBoardWidth()+20), Window.getY(260));
+                Button confirm = new Button(Window.getX(Window.getWidth2()-270), Window.getYNormal(50), "Confirm", ringbearerBody, "ConfirmAttackUnit");
+                confirm.draw();
+            } else {
+                g.drawString("Invalid Attack", Window.getX(Board.GetBoardWidth()+20), Window.getY(220));
+            }
+            
+            Button cancel = new Button(Window.getX(Window.getWidth2()-100), Window.getYNormal(50), "Cancel", ringbearerBody, "Cancel");
+            cancel.draw();
+        }
+    }
+    
+    private static void GameOverMenu(Graphics2D g) {
+        Font ringbearerBody = LoadFont(20);
+        g.setColor(Player.GetWinner().getPlayerColor());
+        g.setFont(ringbearerBody);
+        g.drawString("Game Over", Window.getX(Board.GetBoardWidth()+20), Window.getY(60));
+        g.drawString("Player " + Player.GetWinner().getPlayerNumber() + " has won", Window.getX(Board.GetBoardWidth()+20), Window.getY(100));
     }
     
     private static Font LoadFont(float _size) {
@@ -162,7 +222,11 @@ public class Menu {
     }
     
     public static void ResumeGame() {
-        menuType = MenuType.BLANK;
+        if(!CommandField.gameOver) {
+            menuType = MenuType.BLANK;
+        } else {
+            menuType = MenuType.GAME_OVER;
+        }
         CommandField.inGame = true;
     }
     
@@ -172,6 +236,11 @@ public class Menu {
     
     public static void OpenMoveUnitMenu() {
         menuType = MenuType.UNIT_MOVEMENT;
+        movePiece = selection;
+    }
+    
+    public static void OpenAttackUnitMenu() {
+        menuType = MenuType.UNIT_ATTACK;
         movePiece = selection;
     }
     
@@ -210,5 +279,27 @@ public class Menu {
     
     public static Tile GetSelectedTile() {
         return(selection);
+    }
+    
+    public static void ConfirmMoveUnit() {
+        movePiece.getUnit().move(movePiece, selection);
+        Button.ClearButtons();
+        menuType = MenuType.UNIT_INFO;
+    }
+    
+    public static void ConfirmAttackUnit() {
+        movePiece.getUnit().attack(movePiece, selection);
+        Button.ClearButtons();
+        menuType = MenuType.UNIT_INFO;
+    }
+    
+    public static void NextTurn() {
+        Player.SwitchTurn();
+        Unit.ReplenishMovePoints();
+        menuType = MenuType.UNIT_INFO;
+    }
+    
+    public static void Cancel() {
+        menuType = MenuType.UNIT_INFO;
     }
 }
