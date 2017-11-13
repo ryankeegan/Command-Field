@@ -12,6 +12,7 @@ public class CommandField extends JFrame implements Runnable {
     static boolean animateFirstTime = true;
     static boolean inGame = false;
     static boolean started = false;
+    static boolean gameOver = false;
     static Graphics2D g;
     Thread relaxer;
     Image image;
@@ -98,6 +99,7 @@ public class CommandField extends JFrame implements Runnable {
         }
         
         Menu.Draw(g);
+        Player.CheckGameOver();
         
         gOld.drawImage(image, 0, 0, null);
     }
@@ -121,6 +123,7 @@ public class CommandField extends JFrame implements Runnable {
         Board.BoardInit();
         inGame = false;
         started = false;
+        gameOver = false;
     }
     
     public void run() {

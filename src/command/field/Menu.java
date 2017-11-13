@@ -300,6 +300,7 @@ public class Menu {
     }
     
     public static void Cancel() {
+        selection = movePiece;
         menuType = MenuType.UNIT_INFO;
     }
 }
