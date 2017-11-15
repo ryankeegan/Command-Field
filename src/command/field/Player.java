@@ -8,7 +8,7 @@ public class Player {
     private static Player currentTurn;
     private static Player players[] = new Player[2];
     private ArrayList<Unit> units = new ArrayList<Unit>();
-    private ArrayList<Unit> WINunits = new ArrayList<Unit>();
+    private ArrayList<Unit> winUnits = new ArrayList<Unit>();
     private static Player winner;
     private int playerNumber;
     private static int numPlayers = 1;
@@ -78,8 +78,8 @@ public class Player {
         units.remove(_unit);
     }
     
-    public void addWINUnit(Unit _unit) {
-        WINunits.add(_unit);
+    public void addWinUnit(Unit _unit) {
+        winUnits.add(_unit);
     }
     
     public int getPlayerNumber() {
@@ -94,12 +94,12 @@ public class Player {
         return(playerColor);
     }
     
-    public ArrayList<Unit> getUnits(){
+    public ArrayList<Unit> getUnits() {
         return(units);
     }
     
-    public ArrayList<Unit> getWINUnits(){
-        return(WINunits);
+    public ArrayList<Unit> getWinUnits() {
+        return(winUnits);
     }
     
     public static int GetNextTurnRaw() {
@@ -114,15 +114,15 @@ public class Player {
         return(units.size());
     }
     private boolean checkWinUnitsCross(){
-      if(WINunits.size()==3){
+      if(winUnits.size() == 3) {
           System.out.println("UnitsCross");
           return true;
       } 
       return false;
     }
     private boolean checkWinGensCross(){
-      for(Unit gen : WINunits ){
-        if(gen.getType()==Unit.UnitType.GENERAL){
+      for(Unit gen : winUnits ){
+        if(gen.getType() == Unit.UnitType.GENERAL) {
           System.out.println("gensCross");
             return true;
         } 
@@ -130,20 +130,20 @@ public class Player {
       return false;
     }
     private boolean checkWinUnitsDestroyed(){
-      if(players[GetNextTurnRaw()].units.size()==0){
+      if(players[GetNextTurnRaw()].units.size()==0) {
           System.out.println("UnitsDestroyed");
           return true;
       } 
       return false;
     }
     private boolean checkWinGensDestroyed(){
-      for(Unit gen : players[GetNextTurnRaw()].units ){
-        if(gen.getType()==Unit.UnitType.GENERAL){
+      for(Unit gen : players[GetNextTurnRaw()].units) {
+        if(gen.getType() == Unit.UnitType.GENERAL) {
           return false;
         } 
       }
-      for(Unit gen : players[GetNextTurnRaw()].WINunits ){
-        if(gen.getType()==Unit.UnitType.GENERAL){
+      for(Unit gen : players[GetNextTurnRaw()].winUnits) {
+        if(gen.getType() == Unit.UnitType.GENERAL) {
           return false;
         } 
       }
@@ -152,7 +152,7 @@ public class Player {
     }
     public static void CheckGameOver() {
         for(Player player : players) {
-            if ((player.checkWinGensDestroyed()||player.checkWinUnitsDestroyed()||player.checkWinGensCross()||player.checkWinUnitsCross()) && CommandField.started && !CommandField.gameOver) {
+            if ((player.checkWinGensDestroyed() || player.checkWinUnitsDestroyed() || player.checkWinGensCross() || player.checkWinUnitsCross()) && CommandField.started && !CommandField.gameOver) {
                 currentTurn = player;
                 SwitchTurn();
                 winner = GetPlayer(GetTurn());

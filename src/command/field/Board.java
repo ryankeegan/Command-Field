@@ -76,6 +76,8 @@ public class Board {
                 if(Menu.GetMenuType() != Menu.MenuType.UNIT_SELECTION && Menu.GetMenuType() != Menu.MenuType.UNIT_MOVEMENT && Menu.GetMenuType() != Menu.MenuType.UNIT_ATTACK && !CommandField.gameOver) {
                     Menu.SetMenuType(Menu.MenuType.UNIT_INFO);
                 }
+                
+                Button.ClearButtons();
                 Menu.SetSelection(board[row][col]);
             }
         }
@@ -118,18 +120,7 @@ public class Board {
     }
     
     public static boolean AllowedPlacementTiles(Player _playerTurn, int _row, int _column) {
-        if(_row == NUM_ROWS/2-1) {
-            return(false);
-        }
-        
-        for (int row=(NUM_ROWS/2)*Player.GetNextTurnRaw(); row<NUM_ROWS-((NUM_ROWS/2)*(1-Player.GetNextTurnRaw())); row++) {
-            for (int col=0; col<NUM_COLUMNS; col++) {
-                if(board[row][col] != null && board[row][col] == board[_row][_column]) {
-                    return(true);
-                }
-            }
-        }
-        return(false);
+        return(board[_row+1][_column] != null && !board[_row+1][_column].isShaded());
     }
     
     public static void ClearShadedTiles() {
@@ -156,19 +147,19 @@ public class Board {
     public static int GetNumRows() {
         return NUM_ROWS;
     }
-    public static void checkWINunit(){
+    public static void CheckUnitBoardEnd(){
         for(int col=1; col<Board.GetNumColumns(); col++) {
-            for(Unit WINunit : Player.GetPlayer(0).getUnits()){
-                if(board[1][col].getUnit()!=null && board[1][col].getUnit()==WINunit){
-                    Player.GetPlayer(0).getUnits().remove(WINunit);
-                    Player.GetPlayer(0).getWINUnits().add(WINunit);
+            for(Unit unit : Player.GetPlayer(0).getUnits()) {
+                if(board[1][col].getUnit()!=null && board[1][col].getUnit() == unit) {
+                    Player.GetPlayer(0).getUnits().remove(unit);
+                    Player.GetPlayer(0).getWinUnits().add(unit);
                 }
             }
             
-            for(Unit WINunit : Player.GetPlayer(1).getUnits()){
-                if(board[35][col].getUnit()!=null && board[35][col].getUnit()==WINunit){
-                    Player.GetPlayer(0).getUnits().remove(WINunit);
-                    Player.GetPlayer(0).getWINUnits().add(WINunit);
+            for(Unit unit : Player.GetPlayer(1).getUnits()){
+                if(board[35][col].getUnit()!=null && board[35][col].getUnit() == unit){
+                    Player.GetPlayer(0).getUnits().remove(unit);
+                    Player.GetPlayer(0).getWinUnits().add(unit);
                 }
             }
         }

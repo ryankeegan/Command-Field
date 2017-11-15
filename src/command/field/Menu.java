@@ -48,6 +48,9 @@ public class Menu {
             case UNIT_ATTACK:
                 UnitAttackMenu(g);
                 break;
+            case RULES:
+                RulesMenu(g);
+                break;
             case GAME_OVER:
                 GameOverMenu(g);
                 break;
@@ -75,6 +78,8 @@ public class Menu {
         }
         Button exit = new Button(Window.getX(Window.getWidth2()-100), Window.getYNormal(50), "Exit", ringbearerBody, "Exit");
         exit.draw();
+        Button rules = new Button(Window.getX(Window.getWidth2()-108), Window.getYNormal(90), "Rules", ringbearerBody, "OpenRules");
+        rules.draw();
     }
     
     private static void OptionsMenu(Graphics2D g) {
@@ -221,6 +226,32 @@ public class Menu {
         g.setFont(ringbearerBody);
         g.drawString("Game Over", Window.getX(Board.GetBoardWidth()+20), Window.getY(60));
         g.drawString("Player " + Player.GetWinner().getPlayerNumber() + " has won", Window.getX(Board.GetBoardWidth()+20), Window.getY(100));
+        Button reset = new Button(Window.getX(Window.getWidth2()-270), Window.getYNormal(90), "Reset", ringbearerBody, "ResetGame");
+        reset.draw();
+    }
+    
+    private static void RulesMenu(Graphics2D g) {
+        g.setColor(Color.white);
+        g.fillRect(0, 0, Window.xsize, Window.ysize);
+        
+        Font ringbearerHeader = LoadFont(40);
+        Font ringbearerBody = LoadFont(20);
+        g.setColor(Color.black);
+        g.setFont(ringbearerHeader);
+        g.drawString("Command Field", Window.getX(30), Window.getY(36));
+        g.setFont(ringbearerBody);
+        g.drawString("How to Play:", Window.getX(30), Window.getY(100));
+        g.drawString("• Command Field is a 1v1 turn-based strategy game featuring randomly generated maps, terrain, and various types of units", Window.getX(30), Window.getY(140));
+        g.drawString("• To start, each player is allotted X number of points to place units in their half of the field", Window.getX(30), Window.getY(180));
+        g.drawString("• Unit hit-points, attack and movement range, and damage dealt varies by unit type", Window.getX(30), Window.getY(220));
+        
+        g.drawString("How to Win:", Window.getX(30), Window.getY(260));
+        g.drawString("• Destroy all opposing units                     or", Window.getX(30), Window.getY(300));
+        g.drawString("• Destroy all opposing generals            or", Window.getX(30), Window.getY(340));
+        g.drawString("• Reach the other side with 3 units       or", Window.getX(30), Window.getY(380));
+        g.drawString("• Reach the other side with one general", Window.getX(30), Window.getY(420));
+        Button back = new Button(Window.getX(Window.getWidth2()-100), Window.getYNormal(50), "Back", ringbearerBody, "OpenMainMenu");
+        back.draw();
     }
     
     private static Font LoadFont(float _size) {
@@ -305,7 +336,7 @@ public class Menu {
         movePiece.getUnit().move(movePiece, selection);
         Button.ClearButtons();
         menuType = MenuType.UNIT_INFO;
-        Board.checkWINunit();
+        Board.CheckUnitBoardEnd();
         Board.ClearShadedTiles();
     }
     
@@ -313,7 +344,7 @@ public class Menu {
         movePiece.getUnit().attack(movePiece, selection);
         Button.ClearButtons();
         menuType = MenuType.UNIT_INFO;
-        Board.checkWINunit();
+        Board.CheckUnitBoardEnd();
         Board.ClearShadedTiles();
     }
     
@@ -331,5 +362,14 @@ public class Menu {
                 Board.GetTileOf(row, col).setShaded(false);
             }
         }
+    }
+    
+    public static void OpenRules() {
+        menuType = MenuType.RULES;
+    }
+    
+    public static void OpenMainMenu() {
+        Button.ClearButtons();
+        menuType = MenuType.MAIN;
     }
 }
