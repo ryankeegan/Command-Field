@@ -1,6 +1,7 @@
 package command.field;
 
 import java.awt.*;
+import command.field.units.Unit;
 
 public class Board {
     private final static int BoardWidth = Window.getActualWindowWidth()-Window.getActualWindowWidth()/4;
@@ -154,5 +155,22 @@ public class Board {
     
     public static int GetNumRows() {
         return NUM_ROWS;
+    }
+    public static void checkWINunit(){
+        for(int col=1; col<Board.GetNumColumns(); col++) {
+            for(Unit WINunit : Player.GetPlayer(0).getUnits()){
+                if(board[1][col].getUnit()!=null && board[1][col].getUnit()==WINunit){
+                    Player.GetPlayer(0).getUnits().remove(WINunit);
+                    Player.GetPlayer(0).getWINUnits().add(WINunit);
+                }
+            }
+            
+            for(Unit WINunit : Player.GetPlayer(1).getUnits()){
+                if(board[35][col].getUnit()!=null && board[35][col].getUnit()==WINunit){
+                    Player.GetPlayer(0).getUnits().remove(WINunit);
+                    Player.GetPlayer(0).getWINUnits().add(WINunit);
+                }
+            }
+        }
     }
 }

@@ -129,7 +129,7 @@ public abstract class Unit {
     }
     
     public boolean moveValid(Tile _moveFrom, Tile _moveTo) {
-        return (getMoveCost(_moveFrom, _moveTo) <= move_pts);
+        return (getMoveCost(_moveFrom, _moveTo) <= move_pts );
     }
 
     public boolean tileValid(Tile _tile) {

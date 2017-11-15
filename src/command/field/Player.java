@@ -8,6 +8,7 @@ public class Player {
     private static Player currentTurn;
     private static Player players[] = new Player[2];
     private ArrayList<Unit> units = new ArrayList<Unit>();
+    private ArrayList<Unit> WINunits = new ArrayList<Unit>();
     private static Player winner;
     private int playerNumber;
     private static int numPlayers = 1;
@@ -77,6 +78,10 @@ public class Player {
         units.remove(_unit);
     }
     
+    public void addWINUnit(Unit _unit) {
+        WINunits.add(_unit);
+    }
+    
     public int getPlayerNumber() {
         return(playerNumber);
     }
@@ -87,6 +92,14 @@ public class Player {
     
     public Color getPlayerColor() {
         return(playerColor);
+    }
+    
+    public ArrayList<Unit> getUnits(){
+        return(units);
+    }
+    
+    public ArrayList<Unit> getWINUnits(){
+        return(WINunits);
     }
     
     public static int GetNextTurnRaw() {
@@ -100,10 +113,46 @@ public class Player {
     public int getNumUnits() {
         return(units.size());
     }
-    
+    private boolean checkWinUnitsCross(){
+      if(WINunits.size()==3){
+          System.out.println("UnitsCross");
+          return true;
+      } 
+      return false;
+    }
+    private boolean checkWinGensCross(){
+      for(Unit gen : WINunits ){
+        if(gen.getType()==Unit.UnitType.GENERAL){
+          System.out.println("gensCross");
+            return true;
+        } 
+      }
+      return false;
+    }
+    private boolean checkWinUnitsDestroyed(){
+      if(players[GetNextTurnRaw()].units.size()==0){
+          System.out.println("UnitsDestroyed");
+          return true;
+      } 
+      return false;
+    }
+    private boolean checkWinGensDestroyed(){
+      for(Unit gen : players[GetNextTurnRaw()].units ){
+        if(gen.getType()==Unit.UnitType.GENERAL){
+          return false;
+        } 
+      }
+      for(Unit gen : players[GetNextTurnRaw()].WINunits ){
+        if(gen.getType()==Unit.UnitType.GENERAL){
+          return false;
+        } 
+      }
+      System.out.println("gensDestroyed");
+      return true;
+    }
     public static void CheckGameOver() {
         for(Player player : players) {
-            if (player.units.size() <= 0 && CommandField.started && !CommandField.gameOver) {
+            if ((player.checkWinGensDestroyed()||player.checkWinUnitsDestroyed()||player.checkWinGensCross()||player.checkWinUnitsCross()) && CommandField.started && !CommandField.gameOver) {
                 currentTurn = player;
                 SwitchTurn();
                 winner = GetPlayer(GetTurn());
