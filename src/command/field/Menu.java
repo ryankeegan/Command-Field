@@ -1,5 +1,6 @@
 package command.field;
 
+import static command.field.CommandField.bgMusic;
 import command.field.units.Unit;
 import java.awt.Color;
 import java.awt.Font;
@@ -17,6 +18,8 @@ public class Menu {
     private static MenuType menuType = MenuType.MAIN;
     private static Tile selection;
     private static Tile movePiece;
+    private static Sound attackSound = null;
+    private static Sound hitSound = null;
     
     public static void Draw(Graphics2D g) {
         if(menuType != MenuType.MAIN && menuType != MenuType.UNIT_SELECTION && menuType != MenuType.GAME_OVER && CommandField.inGame) {
@@ -247,16 +250,15 @@ public class Menu {
         
         g.drawString("How to Win:", Window.getX(30), Window.getY(260));
         g.drawString("• Destroy all opposing units                     or", Window.getX(30), Window.getY(300));
-        g.drawString("• Destroy all opposing generals            or", Window.getX(30), Window.getY(340));
-        g.drawString("• Reach the other side with 3 units       or", Window.getX(30), Window.getY(380));
-        g.drawString("• Reach the other side with one general", Window.getX(30), Window.getY(420));
+        g.drawString("• Reach the other side with 3 units       or", Window.getX(30), Window.getY(340));
+        g.drawString("• Reach the other side with one general", Window.getX(30), Window.getY(380));
         Button back = new Button(Window.getX(Window.getWidth2()-100), Window.getYNormal(50), "Back", ringbearerBody, "OpenMainMenu");
         back.draw();
     }
     
     private static Font LoadFont(float _size) {
         try {
-            Font font = Font.createFont(Font.TRUETYPE_FONT, new File("ringbearer.ttf"));
+            Font font = Font.createFont(Font.TRUETYPE_FONT, new File("res/ringbearer.ttf"));
             return font.deriveFont(_size);
         } catch (IOException|FontFormatException e) {
         }
@@ -293,6 +295,9 @@ public class Menu {
     public static void OpenAttackUnitMenu() {
         menuType = MenuType.UNIT_ATTACK;
         movePiece = selection;
+        if(attackSound == null || attackSound.donePlaying != false) {
+            attackSound = new Sound("res/attack.wav");
+        }
     }
     
     public static void ConfirmUnitPlacement() {
@@ -341,11 +346,15 @@ public class Menu {
     }
     
     public static void ConfirmAttackUnit() {
+        if(hitSound == null || hitSound.donePlaying != false) {
+            hitSound = new Sound("res/hit.wav");
+        }
         movePiece.getUnit().attack(movePiece, selection);
         Button.ClearButtons();
         menuType = MenuType.UNIT_INFO;
         Board.CheckUnitBoardEnd();
         Board.ClearShadedTiles();
+        selection = movePiece;
     }
     
     public static void NextTurn() {

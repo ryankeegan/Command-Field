@@ -107,8 +107,13 @@ public class Tile {
             System.out.println("Unit already on tile");
         }
     }
+    
     public void removeUnit() {
         unit = null;
+    }
+    
+    public boolean isShaded() {
+        return(shaded);
     }
     
     public void drawCenteredString(Graphics g, String text, Rectangle rect, Font font) {

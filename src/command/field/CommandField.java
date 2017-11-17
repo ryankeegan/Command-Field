@@ -14,9 +14,12 @@ public class CommandField extends JFrame implements Runnable {
     static boolean started = false;
     static boolean gameOver = false;
     static Graphics2D g;
+    static Sound bgMusic = null;
     Thread relaxer;
     Image image;
+    Image background;
     static Timer t = new Timer();
+    static Image iconImage = Toolkit.getDefaultToolkit().getImage("res/icon.png");
     
     CommandField() {
         addMouseListener(new MouseAdapter() {
@@ -37,7 +40,7 @@ public class CommandField extends JFrame implements Runnable {
         addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 if (e.VK_INSERT == e.getKeyCode()) {
-                    Board.BoardInit();
+                    //Board.BoardInit();
                 } else if(e.VK_ESCAPE == e.getKeyCode()) {
                     if(started) {
                         Button.ClearButtons();
@@ -64,6 +67,8 @@ public class CommandField extends JFrame implements Runnable {
         CommandField frame = new CommandField();
         frame.setSize(Window.WINDOW_WIDTH, Window.WINDOW_HEIGHT);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setIconImage(iconImage);
+        frame.setTitle("Command Field");
         frame.setVisible(true);
         frame.setResizable(false);
     }
@@ -78,7 +83,7 @@ public class CommandField extends JFrame implements Runnable {
         }
         
         //Fill border
-        g.setColor(Color.DARK_GRAY);
+        g.setColor(Color.black);
         g.fillRect(0, 0, Window.xsize, Window.ysize);
 
         int x[] = {Window.getX(0), Window.getX(Window.getWidth2()), Window.getX(Window.getWidth2()), Window.getX(0), Window.getX(0)};
@@ -88,8 +93,9 @@ public class CommandField extends JFrame implements Runnable {
         if(!inGame) {
             g.setColor(Color.white);
             g.fillPolygon(x, y, 4);
+            g.drawImage(background, Window.getX(0), Window.getY(0), Window.getWidth2(), Window.getHeight2(), this);
             Board.Draw(g);
-            g.setColor(new Color(255, 255, 255, 200));
+            g.setColor(new Color(255, 255, 255, 155));
             g.fillPolygon(x, y, 4);
         } else {
             t.cancel();
@@ -111,7 +117,8 @@ public class CommandField extends JFrame implements Runnable {
                 Window.xsize = getSize().width;
                 Window.ysize = getSize().height;
             }
-            
+
+            background = Toolkit.getDefaultToolkit().getImage("res/background.jpg");
             Board.BoardInit();
             reset();
         }
@@ -121,6 +128,9 @@ public class CommandField extends JFrame implements Runnable {
         Player.PlayersInit();
         Menu.SetMenuType(Menu.MenuType.MAIN);
         Board.BoardInit();
+        if(bgMusic == null || bgMusic.donePlaying != false) {
+            bgMusic = new Sound("res/backgroundMusic.wav");
+        }
         inGame = false;
         started = false;
         gameOver = false;

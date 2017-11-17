@@ -110,51 +110,77 @@ public class Player {
         }
     }
     
+    public int getNextTurnRelative() {
+        if(playerNumber+1 < players.length && players[GetTurn()+1] != null) {
+            return(players[GetTurn()+1].getPlayerNumberRaw());
+        } else {
+            return(players[0].getPlayerNumberRaw());
+        }
+    }
+    
     public int getNumUnits() {
         return(units.size());
     }
+    
     private boolean checkWinUnitsCross(){
       if(winUnits.size() == 3) {
-          System.out.println("UnitsCross");
           return true;
       } 
       return false;
     }
+    
     private boolean checkWinGensCross(){
-      for(Unit gen : winUnits ){
-        if(gen.getType() == Unit.UnitType.GENERAL) {
-          System.out.println("gensCross");
-            return true;
-        } 
-      }
-      return false;
+        for(Unit gen : winUnits ) {
+            if(gen.getType() == Unit.UnitType.GENERAL) {
+                return true;
+            }
+        }
+        return false;
     }
-    private boolean checkWinUnitsDestroyed(){
-      if(players[GetNextTurnRaw()].units.size()==0) {
-          System.out.println("UnitsDestroyed");
-          return true;
-      } 
-      return false;
+    
+    public static Player checkUnitsDestroyed() {
+        for(Player player : players) {
+            if(player.units.isEmpty()) {
+                return(player);
+            }
+        }
+        return(null);
     }
-    private boolean checkWinGensDestroyed(){
-      for(Unit gen : players[GetNextTurnRaw()].units) {
-        if(gen.getType() == Unit.UnitType.GENERAL) {
-          return false;
-        } 
-      }
-      for(Unit gen : players[GetNextTurnRaw()].winUnits) {
-        if(gen.getType() == Unit.UnitType.GENERAL) {
-          return false;
-        } 
-      }
-      System.out.println("gensDestroyed");
-      return true;
+    
+    public static Player checkGeneralsDestroyed() {
+        for(Player player : players) {
+            if(player.checkGeneralsDestroyedSelf()) {
+                return(player);
+            }
+        }
+        
+        return(null);
     }
+    
+    public boolean checkGeneralsDestroyedSelf() {
+        for(Unit gen : units) {
+            if(gen.getType() == Unit.UnitType.GENERAL) {
+                return(false);
+            }
+        }
+        
+        for(Unit gen : winUnits) {
+            if(gen.getType() == Unit.UnitType.GENERAL) {
+                return(false);
+            }
+        }
+        
+        return(true);
+    }
+    
     public static void CheckGameOver() {
         for(Player player : players) {
-            if ((player.checkWinGensDestroyed() || player.checkWinUnitsDestroyed() || player.checkWinGensCross() || player.checkWinUnitsCross()) && CommandField.started && !CommandField.gameOver) {
+            if ((checkUnitsDestroyed() != null || player.checkWinGensCross() || player.checkWinUnitsCross()) && CommandField.started && !CommandField.gameOver) {
                 currentTurn = player;
-                SwitchTurn();
+                if(checkUnitsDestroyed().playerNumber == 1) {
+                    SwitchTurn();
+                }
+                
                 winner = GetPlayer(GetTurn());
                 Menu.SetMenuType(Menu.MenuType.GAME_OVER);
                 CommandField.gameOver = true;
