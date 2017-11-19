@@ -147,7 +147,7 @@ public class Player {
         return(null);
     }
     
-    public static Player checkGeneralsDestroyed() {
+    public static Player CheckGeneralsDestroyed() {
         for(Player player : players) {
             if(player.checkGeneralsDestroyedSelf()) {
                 return(player);
@@ -175,9 +175,9 @@ public class Player {
     
     public static void CheckGameOver() {
         for(Player player : players) {
-            if ((checkUnitsDestroyed() != null || player.checkWinGensCross() || player.checkWinUnitsCross()) && CommandField.started && !CommandField.gameOver) {
+            if ((checkUnitsDestroyed() != null || CheckGeneralsDestroyed() != null || player.checkWinGensCross() || player.checkWinUnitsCross()) && CommandField.started && !CommandField.gameOver) {
                 currentTurn = player;
-                if(checkUnitsDestroyed().playerNumber == 1) {
+                if((checkUnitsDestroyed() != null && checkUnitsDestroyed().playerNumber == 1) || (CheckGeneralsDestroyed() != null && CheckGeneralsDestroyed().playerNumber == 1)) {
                     SwitchTurn();
                 }
                 

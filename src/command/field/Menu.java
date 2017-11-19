@@ -1,6 +1,5 @@
 package command.field;
 
-import static command.field.CommandField.bgMusic;
 import command.field.units.Unit;
 import java.awt.Color;
 import java.awt.Font;
@@ -97,7 +96,7 @@ public class Menu {
         g.setFont(ringbearerBody);
         g.drawString("Player " + (Player.GetTurn()+1) + " Unit Selection", Window.getX(15), Window.getY(20));
         g.drawString("Points: " + Player.GetPlayer(Player.GetTurn()).getTroopPoints(), Window.getX(355), Window.getY(20));
-        if(Player.GetPlayer(Player.GetTurn()).getNumUnits() > 0) {
+        if(Player.GetPlayer(Player.GetTurn()).getNumUnits() > 0 && !Player.GetPlayer(Player.GetTurn()).checkGeneralsDestroyedSelf()) {
             Button done = new Button(Window.getX(Window.getWidth2()-100), Window.getYNormal(50), "Done", ringbearerBody, "ConfirmUnitPlacement");
             done.draw();
         }
@@ -166,16 +165,13 @@ public class Menu {
             g.drawString("Unit Action Points:   " + movePiece.getUnit().getMovePoints(), Window.getX(Board.GetBoardWidth()+20), Window.getY(140));
             g.drawString("Post Action:   " + movePiece.getUnit().getMovePoints() + "-" + movePiece.getUnit().getMoveCost(movePiece, selection) + "=" + (movePiece.getUnit().getMovePoints() - movePiece.getUnit().getMoveCost(movePiece, selection)), Window.getX(Board.GetBoardWidth()+20), Window.getY(180));
 
-            //System.out.println(movePiece);
-               for(int col=1; col<Board.GetNumColumns(); col++) {
-                    for(int row=1; row<Board.GetNumRows()-1; row++) {
-                       // System.out.println(Board.GetTileOf(row, col));
-                        if(Board.GetTileOf(row, col).getUnit()==null && movePiece.getUnit().moveValid(movePiece, Board.GetTileOf(row, col))){
-                            Board.GetTileOf(row, col).setShaded(true, new Color(255,0,0,125));
-                        }
+            for(int col=1; col<Board.GetNumColumns(); col++) {
+                for(int row=0; row<Board.GetNumRows()-1; row++) {
+                    if(Board.GetTileOf(row, col).getUnit() == null && movePiece.getUnit().moveValid(movePiece, Board.GetTileOf(row, col)) && movePiece.getUnit().tileValid(Board.GetTileOf(row, col))) {
+                        Board.GetTileOf(row, col).setShaded(true, new Color(255,0,0,125));
                     }
                 }
-
+            }
             
             if(movePiece.getUnit().tileValid(selection) && movePiece.getUnit().moveValid(movePiece, selection) && selection.getUnit() == null) {
                 g.drawString("Movement Cost:   " + movePiece.getUnit().getMoveCost(movePiece, selection), Window.getX(Board.GetBoardWidth()+20), Window.getY(220));
@@ -199,16 +195,15 @@ public class Menu {
             g.drawString("Selected Tile:   " + (selection.getRow()+1) + ", " + selection.getCol(), Window.getX(Board.GetBoardWidth()+20), Window.getY(100));
             g.drawString("Unit Action Points:   " + movePiece.getUnit().getMovePoints(), Window.getX(Board.GetBoardWidth()+20), Window.getY(140));
             g.drawString("Post Action:   " + movePiece.getUnit().getMovePoints() + "-" + (movePiece.getUnit().getAttackCost(movePiece, selection)) + "=" + (movePiece.getUnit().getMovePoints() - movePiece.getUnit().getAttackCost(movePiece, selection)), Window.getX(Board.GetBoardWidth()+20), Window.getY(180));
-            
-            //System.out.println(movePiece);
-               for(int col=1; col<Board.GetNumColumns(); col++) {
-                    for(int row=1; row<Board.GetNumRows()-1; row++) {
-                       // System.out.println(Board.GetTileOf(row, col));
-                        if( movePiece.getUnit().attackValid(movePiece, Board.GetTileOf(row, col))){
-                            Board.GetTileOf(row, col).setShaded(true, new Color(255,0,0,125));
-                        }
+
+            for(int col=1; col<Board.GetNumColumns(); col++) {
+                for(int row=0; row<Board.GetNumRows()-1; row++) {
+                    if(movePiece.getUnit().attackValid(movePiece, Board.GetTileOf(row, col)) && movePiece.getUnit().tileValid(Board.GetTileOf(row, col))){
+                        Board.GetTileOf(row, col).setShaded(true, new Color(255, 0, 0, 125));
                     }
                 }
+            }
+
             if(movePiece.getUnit().attackValid(movePiece, selection) && selection.getUnit() != null) {
                 g.drawString("Attack Cost:   " + movePiece.getUnit().getAttackCost(movePiece, selection), Window.getX(Board.GetBoardWidth()+20), Window.getY(220));
                 g.drawString("Selected Unit HP:   " + selection.getUnit().getHP() + "/" + Unit.ResolveUnitHP(selection.getUnit().getType()), Window.getX(Board.GetBoardWidth()+20), Window.getY(260));
@@ -250,8 +245,9 @@ public class Menu {
         
         g.drawString("How to Win:", Window.getX(30), Window.getY(260));
         g.drawString("• Destroy all opposing units                     or", Window.getX(30), Window.getY(300));
-        g.drawString("• Reach the other side with 3 units       or", Window.getX(30), Window.getY(340));
-        g.drawString("• Reach the other side with one general", Window.getX(30), Window.getY(380));
+        g.drawString("• Destroy all opposing generals            or", Window.getX(30), Window.getY(340));
+        g.drawString("• Reach the other side with 3 units       or", Window.getX(30), Window.getY(380));
+        g.drawString("• Reach the other side with one general", Window.getX(30), Window.getY(420));
         Button back = new Button(Window.getX(Window.getWidth2()-100), Window.getYNormal(50), "Back", ringbearerBody, "OpenMainMenu");
         back.draw();
     }

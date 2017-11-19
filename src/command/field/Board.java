@@ -147,19 +147,18 @@ public class Board {
     public static int GetNumRows() {
         return NUM_ROWS;
     }
-    public static void CheckUnitBoardEnd(){
+    
+    public static void CheckUnitBoardEnd() {
         for(int col=1; col<Board.GetNumColumns(); col++) {
             for(Unit unit : Player.GetPlayer(0).getUnits()) {
-                if(board[1][col].getUnit()!=null && board[1][col].getUnit() == unit) {
-                    Player.GetPlayer(0).getUnits().remove(unit);
+                if(board[1][col].getUnit() != null && board[1][col].getUnit() == unit && !Player.GetPlayer(0).getWinUnits().contains(unit)) {
                     Player.GetPlayer(0).getWinUnits().add(unit);
                 }
             }
             
             for(Unit unit : Player.GetPlayer(1).getUnits()){
-                if(board[35][col].getUnit()!=null && board[35][col].getUnit() == unit){
-                    Player.GetPlayer(0).getUnits().remove(unit);
-                    Player.GetPlayer(0).getWinUnits().add(unit);
+                if(board[35][col].getUnit() != null && board[35][col].getUnit() == unit && !Player.GetPlayer(1).getWinUnits().contains(unit)) {
+                    Player.GetPlayer(1).getWinUnits().add(unit);
                 }
             }
         }

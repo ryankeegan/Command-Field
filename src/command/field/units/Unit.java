@@ -178,6 +178,8 @@ public abstract class Unit {
             if((col > _moveFrom.getCol() && col <= _moveTo.getCol()) || (col < _moveFrom.getCol() && col >= _moveTo.getCol())) {
                 if(terrainCost.get(Board.GetTileOf(_moveFrom.getRow(), col).getType()) != null) {
                     cost += 10*terrainCost.get(Board.GetTileOf(_moveFrom.getRow(), col).getType());
+                } else {
+                    return(500);
                 }
             }
         }
@@ -186,6 +188,8 @@ public abstract class Unit {
             if((row > _moveFrom.getRow() && row <= _moveTo.getRow()) || (row < _moveFrom.getRow() && row >= _moveTo.getRow())) {
                 if(terrainCost.get(Board.GetTileOf(row, _moveFrom.getCol()).getType()) != null) {
                     cost += 10*terrainCost.get(Board.GetTileOf(row, _moveFrom.getCol()).getType());
+                } else {
+                    return(500);
                 }
             }
         }
